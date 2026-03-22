@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Shree Shyam Library | v49.0 Clear</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root { --p: #1a237e; --s: #4a148c; --g: #ffd700; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #ffffff; overflow-x: hidden; color: #1e293b; }
+
+        /* ULTRA CLEAR HD WALLPAPER */
+        #bgWallpaper { 
+            position: fixed; inset: 0; z-index: -2; 
+            background: url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=3000&auto=format&fit=crop') center/cover no-repeat;
+            filter: brightness(1.1) contrast(1.1); /* Full clarity */
+        }
+        #bgOverlay { 
+            position: fixed; inset: 0; z-index: -1; 
+            background: rgba(255, 255, 255, 0.5); /* Very light tint for readability */
+        }
+
+        /* 🕺 DAZZLING JUMPING LOGO */
+        @keyframes jump { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px) scale(1.05); } }
+        .logo-jump { animation: jump 1.8s ease-in-out infinite; text-shadow: 0 5px 15px rgba(26, 35, 126, 0.3); }
+
+        /* PREMIUM BUTTONS WITH GLOW */
+        .btn-premium {
+            background: linear-gradient(135deg, var(--p), var(--s));
+            color: white; font-weight: 800; border-radius: 1rem;
+            box-shadow: 0 10px 30px -5px rgba(26, 35, 126, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent; cursor: pointer;
+        }
+        .btn-premium:hover { box-shadow: 0 15px 40px -5px rgba(26, 35, 126, 0.6); border-color: var(--g); }
+        .btn-premium:active { transform: scale(0.93) translateY(2px); }
+
+        /* ELEGANT CARDS */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 2.5rem; border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 35px 70px -15px rgba(0,0,0,0.15);
+            backdrop-filter: blur(8px);
+        }
+
+        .input-minimal {
+            background: #f8fafc; border: 2px solid #e2e8f0;
+            border-radius: 1rem; padding: 16px; width: 100%; font-weight: 700;
+        }
+        .input-minimal:focus { border-color: var(--p); background: #fff; outline: none; }
+
+        .seat {
+            aspect-ratio: 1; border-radius: 12px; display: flex; align-items: center;
+            justify-content: center; font-size: 11px; font-weight: 800; cursor: pointer;
+            border: 2px solid #e2e8f0; background: #fff; color: #94a3b8; transition: 0.2s;
+        }
+        .seat.selected { background: var(--p) !important; color: white !important; border-color: var(--p); box-shadow: 0 0 15px var(--g); }
+        .seat.occupied { background: #334155 !important; color: #f1f5f9 !important; cursor: not-allowed; border: none; }
+        
+        /* New Aesthetic Header */
+        .library-header { 
+            position: fixed; top: 0; left: 0; right: 0; height: 75px; 
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px); 
+            z-index: 1000; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 25px; border-bottom: 2px solid rgba(26, 35, 126, 0.08);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+    </style>
+</head>
+<body onload="initApp()">
+
+    <div id="bgWallpaper"></div>
+    <div id="bgOverlay"></div>
+
+    <header class="library-header">
+        <div class="flex items-center gap-3">
+            <span class="font-black text-slate-900 text-xl uppercase tracking-tighter italic">Shree Shyam Library</span>
+        </div>
+        <div onclick="checkAdmin()" class="flex items-center gap-2 cursor-pointer select-none">
+            <i class="fas fa-book-open text-indigo-700 text-2xl drop-shadow-sm"></i>
+        </div>
+    </header>
+
+    <div id="landing" class="min-h-screen flex flex-col items-center justify-center p-6 text-center pt-[100px]">
+        <div class="mb-16 logo-jump select-none">
+            <h1 class="text-7xl font-black tracking-tighter text-slate-900 leading-[0.85] drop-shadow-lg">
+                <span class="text-indigo-800">Shree</span><br>
+                <span class="text-indigo-900">Shyam<br>Library</span>
+            </h1>
+            <p class="mt-4 text-[12px] font-extrabold text-slate-500 uppercase tracking-[0.5em] italic">Where Knowledge Blooms Bassi</p>
+        </div>
+        <div class="flex flex-col gap-5 w-full max-w-sm">
+            <button onclick="showStep('auth')" class="btn-premium py-5 text-xl uppercase tracking-widest shadow-indigo-100">Student Login</button>
+            <button onclick="showStep('reg')" class="bg-white/95 border-2 border-indigo-100 py-4 text-[11px] font-black text-indigo-700 uppercase rounded-[1.2rem] shadow-xl shadow-indigo-100"> Admission Form</button>
+        </div>
+    </div>
+
+    <div id="auth" class="hidden min-h-screen flex flex-col items-center justify-center p-6 relative pt-[100px]">
+        <button onclick="showStep('landing')" class="absolute top-[85px] left-8 text-slate-700"><i class="fas fa-arrow-left text-2xl hover:text-indigo-700 transition"></i></button>
+        <div class="glass-card w-full max-w-sm p-10 text-center">
+            <h2 class="text-3xl font-black mb-10 text-slate-900 italic uppercase tracking-tighter">Enter Portal</h2>
+            <div class="space-y-5 mb-10">
+                <input type="text" id="logID" placeholder="Your Registered ID" class="input-minimal uppercase">
+                <input type="password" id="logOtp" placeholder="Your Secret Pin" class="input-minimal" inputmode="numeric">
+            </div>
+            <button onclick="doLogin()" class="btn-premium w-full py-5 text-sm uppercase tracking-widest">Verify Details</button>
+        </div>
+    </div>
+
+    <div id="reg" class="hidden min-h-screen flex flex-col items-center justify-center p-6 pt-[120px] relative">
+        <button onclick="showStep('landing')" class="absolute top-[85px] left-8 text-slate-700"><i class="fas fa-arrow-left text-2xl hover:text-indigo-700 transition"></i></button>
+        
+        <div id="reg_form" class="glass-card w-full max-w-sm p-9">
+            <h2 class="text-xl font-black mb-8 text-slate-900 uppercase italic tracking-wide text-center">Admission form</h2>
+            <div class="space-y-5 mb-6 text-left">
+                <div><label class="text-[10px] font-black text-slate-500 uppercase ml-1">Full Name</label><input type="text" id="regName" class="input-minimal mt-1"></div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Your Selfie</label>
+                    <div class="bg-slate-50 p-4 rounded-2xl border-2 border-dashed border-slate-200 mt-1"><input type="file" id="regPhoto" class="text-[10px] text-slate-500 file:hidden" accept="image/*"></div>
+                </div>
+            </div>
+            <p class="text-[10px] font-black text-indigo-500 uppercase mb-3 text-left">Select Library Seat:</p>
+            <div id="regSeatGrid" class="grid grid-cols-10 gap-2 mb-8 h-44 overflow-y-auto p-2 bg-slate-100 rounded-2xl border border-slate-200"></div>
+            <button id="subBtn" onclick="handleRequest()" class="btn-premium w-full py-5 text-sm uppercase tracking-widest">Submit Application</button>
+        </div>
+
+        <div id="reg_result" class="hidden w-full flex flex-col items-center">
+            <div id="waitingBox" class="glass-card p-12 text-center w-full max-w-sm">
+                <div class="w-20 h-20 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-8 text-4xl shadow-inner border border-amber-100"><i class="fas fa-hourglass-half animate-pulse"></i></div>
+                <h3 class="text-xl font-black text-slate-900 uppercase mb-2">Request Pending</h3>
+                <p class="text-slate-500 text-xs px-4 leading-relaxed">Admin verification in progress. You will get your <b>ID</b> and <b>OTP</b> here once approved. Tap 'Refresh' periodically.</p>
+                <button onclick="location.reload()" class="mt-10 text-indigo-700 font-black text-[11px] uppercase underline tracking-tighter">Refresh Status</button>
+            </div>
+
+            <div id="reg_card" class="hidden flex flex-col items-center">
+                <div class="bg-white p-9 w-[330px] rounded-[3rem] shadow-2xl relative border border-slate-100 text-center">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="text-left"><h4 class="font-black text-slate-900 italic leading-none">SS ELITE</h4><p class="text-[8px] text-slate-400 uppercase mt-1">Bassi Rajasthan</p></div>
+                        <div id="cardPic" class="w-16 h-16 rounded-2xl bg-slate-50 overflow-hidden shadow-inner border-2 border-slate-100"></div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-indigo-900 p-6 rounded-[2rem] text-white shadow-xl shadow-indigo-100">
+                            <p class="text-[9px] font-bold opacity-70 uppercase mb-1">Your ID Card</p>
+                            <h2 id="cardID" class="text-3xl font-black tracking-tighter"></h2>
+                        </div>
+                        <div class="flex justify-between px-3 pt-3 border-t mt-4 border-slate-100">
+                            <div class="text-left"><p class="text-[9px] text-slate-400 uppercase font-bold">Seat</p><b id="cardSeatDisp" class="text-indigo-700 text-lg"></b></div>
+                            <div class="text-right"><p class="text-[9px] text-slate-400 uppercase font-bold">Pin</p><b id="cardOtp" class="text-lg text-slate-800"></b></div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="showStep('auth')" class="btn-premium mt-10 px-14 py-4 text-xs uppercase shadow-xl shadow-indigo-200">Unlock Portal</button>
+            </div>
+        </div>
+    </div>
+
+    <main id="portal" class="hidden pt-[110px] px-4 max-w-4xl mx-auto pb-20">
+        <div class="glass-card p-6 mb-8 flex justify-between items-center border-l-[6px] border-indigo-700 shadow-xl shadow-indigo-50">
+            <div><p class="text-[10px] font-black text-indigo-700 uppercase tracking-widest">Member Portal</p><h3 id="uName" class="text-2xl font-black text-slate-900 italic uppercase">STUDENT</h3></div>
+            <button onclick="location.reload()" class="w-12 h-12 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center border border-rose-100 hover:bg-rose-100 transition"><i class="fas fa-power-off"></i></button>
+        </div>
+        <div class="glass-card p-10 text-center relative overflow-hidden">
+            <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-10 italic">Library Seat Environment Map</p>
+            <div id="portalGrid" class="grid grid-cols-5 sm:grid-cols-10 gap-3"></div>
+        </div>
+    </main>
+
+    <div id="admin" class="fixed inset-0 z-[5000] hidden bg-slate-50 p-6 overflow-y-auto pt-[100px]">
+        <div class="max-w-2xl mx-auto">
+            <div class="flex justify-between items-center mb-10 border-b pb-5 border-slate-200">
+                <h2 class="text-2xl font-black text-slate-900 uppercase italic">Master Control</h2>
+                <button onclick="location.reload()" class="text-[10px] font-black uppercase text-rose-600 bg-rose-50 px-5 py-2 rounded-lg italic">Logout Admin</button>
+            </div>
+            
+            <div class="glass-card p-7 mb-8 bg-white border border-slate-100">
+                <h3 class="text-xs font-black text-indigo-700 uppercase mb-5 tracking-widest italic">Seat Portal (Real-Time Status)</h3>
+                <div id="adminSeatGrid" class="grid grid-cols-10 gap-2 p-2 bg-slate-50 rounded-xl"></div>
+            </div>
+
+            <div class="glass-card p-7 mb-8 bg-white border border-slate-100">
+                <h3 class="text-xs font-black text-indigo-700 uppercase mb-4">Master Password settings</h3>
+                <div class="flex gap-4">
+                    <input type="text" id="newAdminPass" placeholder="Update Password" class="input-minimal text-xs py-3">
+                    <button onclick="updatePass()" class="btn-premium px-7 text-[10px]">Update</button>
+                </div>
+            </div>
+            <h3 class="text-xs font-black text-slate-400 uppercase mb-5 px-2">Registered Student Database</h3>
+            <div id="adminList" class="space-y-5 pb-20"></div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIG - CHANGE PASSWORD HERE
+        let core = JSON.parse(localStorage.getItem('ss_core_v49')) || { 
+            users: [], nextID: 101, bookedSeats: [], pass: "shyam77" 
+        };
+        let session = JSON.parse(localStorage.getItem('ss_session_v49')) || { status: 'none', myID: null };
+        let selectedSeat = null;
+
+        function showStep(id) {
+            ['landing','auth','reg','portal','admin'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            window.scrollTo(0, 0); // Always scroll to top
+            if(id === 'reg') renderSeatGrid('regSeatGrid');
+            if(id === 'admin') renderSeatGrid('adminSeatGrid', true);
+        }
+
+        function initApp() {
+            if(session.status !== 'none') {
+                showStep('reg');
+                document.getElementById('reg_form').classList.add('hidden');
+                const me = core.users.find(u => u.id === session.myID);
+                if(me && me.status === 'approved') {
+                    document.getElementById('reg_result').classList.remove('hidden');
+                    document.getElementById('waitingBox').classList.add('hidden');
+                    document.getElementById('reg_card').classList.remove('hidden');
+                    document.getElementById('cardID').innerText = me.id;
+                    document.getElementById('cardOtp').innerText = me.otp;
+                    document.getElementById('cardSeatDisp').innerText = "#" + me.seat;
+                    document.getElementById('cardPic').innerHTML = me.pic ? `<img src="${me.pic}" class="w-full h-full object-cover">` : `<i class="fas fa-user p-4 text-slate-300"></i>`;
+                } else {
+                    document.getElementById('reg_result').classList.remove('hidden');
+                    document.getElementById('waitingBox').classList.remove('hidden');
+                }
+            }
+        }
+
+        function renderSeatGrid(containerID, isAdmin = false) {
+            const grid = document.getElementById(containerID); grid.innerHTML = '';
+            for(let i=1; i<=50; i++) {
+                const isBooked = core.bookedSeats.includes(i);
+                const seat = document.createElement('div');
+                seat.className = `seat ${isBooked ? 'occupied' : ''}`;
+                seat.innerText = i;
+                if(!isBooked && !isAdmin) {
+                    seat.onclick = () => { 
+                        document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
+                        seat.classList.add('selected'); selectedSeat = i; 
+                    };
+                }
+                grid.appendChild(seat);
+            }
+        }
+
+        function handleRequest() {
+            const name = document.getElementById('regName').value.trim();
+            const photo = document.getElementById('regPhoto').files[0];
+            if(!name || !photo || !selectedSeat) return alert("Pura form bharein aur Seat select karein!");
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const newID = "SS-" + core.nextID;
+                const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
+                core.users.unshift({ id: newID, name: name, pic: e.target.result, otp: newOtp, status: 'pending', seat: selectedSeat });
+                core.nextID++; core.bookedSeats.push(selectedSeat);
+                session.status = 'pending'; session.myID = newID;
+                localStorage.setItem('ss_core_v49', JSON.stringify(core));
+                localStorage.setItem('ss_session_v49', JSON.stringify(session));
+                location.reload();
+            };
+            reader.readAsDataURL(photo);
+        }
+
+        function checkAdmin() {
+            if(prompt("Enter Admin Master Key:") === core.pass) {
+                showStep('admin'); renderAdmin();
+            }
+        }
+
+        function renderAdmin() {
+            const list = document.getElementById('adminList');
+            list.innerHTML = core.users.map((u, i) => `
+                <div class="bg-white p-6 rounded-[2rem] border shadow-sm flex flex-col gap-4">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl border overflow-hidden bg-slate-50">${u.pic ? `<img src="${u.pic}" class="w-full h-full object-cover">` : `<i class="fas fa-user text-slate-300 p-3"></i>`}</div>
+                            <div><p class="font-black text-xs uppercase text-slate-800 tracking-tighter">${u.name}</p><p class="text-[9px] text-indigo-700 font-bold">Seat: ${u.seat} | ID: ${u.id}</p></div>
+                        </div>
+                        ${u.status === 'pending' ? `<button onclick="approveNow(${i})" class="bg-indigo-700 text-white px-5 py-2 rounded-xl text-[10px] font-black uppercase shadow-lg shadow-indigo-100 transition hover:brightness(1.05)">Approve Now</button>` : `<span class="text-[10px] font-black text-green-500 uppercase tracking-widest border border-green-100 bg-green-50 px-3 py-1 rounded-lg">ACTIVE</span>`}
+                    </div>
+                    <button onclick="vacantSeat(${i})" class="w-full py-2 bg-rose-50 text-rose-500 text-[10px] font-black uppercase rounded-xl border border-rose-100 hover:bg-rose-100 transition">Vacant Seat (Delete Member)</button>
+                </div>
+            `).join('');
+        }
+
+        function approveNow(i) { core.users[i].status = 'approved'; localStorage.setItem('ss_core_v49', JSON.stringify(core)); renderAdmin(); }
+        
+        function vacantSeat(i) {
+            if(core.users[i].id === "BOSS-01") return alert("Boss ID cannot be deleted!");
+            const seatToFree = core.users[i].seat;
+            core.bookedSeats = core.bookedSeats.filter(s => s !== seatToFree);
+            core.users.splice(i, 1);
+            localStorage.setItem('ss_core_v49', JSON.stringify(core)); renderAdmin(); renderSeatGrid('adminSeatGrid', true);
+        }
+
+        function updatePass() { const p = document.getElementById('newAdminPass').value.trim(); if(p) { core.pass = p; localStorage.setItem('ss_core_v49', JSON.stringify(core)); alert("Master Password Updated!"); } }
+
+        function doLogin() {
+            const id = document.getElementById('logID').value.trim().toUpperCase(), otp = document.getElementById('logOtp').value.trim();
+            if(id === "BOSS-01" && otp === "0007") {
+                showStep('portal'); document.getElementById('uName').innerText = "SUPER BOSS";
+                const pGrid = document.getElementById('portalGrid'); pGrid.innerHTML = '';
+                for(let i=1; i<=50; i++) pGrid.innerHTML += `<div class="w-full aspect-square rounded-xl flex items-center justify-center font-black text-[10px] bg-slate-50 text-slate-300 border border-slate-200">${i}</div>`;
+                return;
+            }
+            const me = core.users.find(u => u.id === id && u.otp === otp);
+            if(!me) return alert("Invalid Credentials!");
+            if(me.status !== 'approved') return alert("Admin Approval Pending!");
+            
+            showStep('portal'); document.getElementById('uName').innerText = me.name;
+            const pGrid = document.getElementById('portalGrid'); pGrid.innerHTML = '';
+            for(let i=1; i<=50; i++) pGrid.innerHTML += `<div class="w-full aspect-square rounded-xl flex items-center justify-center font-black text-[10px] ${me.seat == i ? 'bg-indigo-700 text-white shadow-lg' : 'bg-slate-50 text-slate-300 border border-slate-200'}">${i}</div>`;
+        }
+    </script>
+</body>
+</html>
